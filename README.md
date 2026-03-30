@@ -2,7 +2,7 @@
 
 > A comprehensive security hardening checklist for CyberPatriot competitions on Windows systems. Items are ordered from highest to lowest point value.
 
-## BIG FIRST STEPS
+## BIG FIRST THINGS
 
 **DO THESE BEFORE ANYTHING ELSE:**
 
@@ -10,6 +10,7 @@
 2. **Answer all forensics questions** - Complete BEFORE making system changes
 3. **Document authorized users and admins** - Write down who should have access according to README
 4. **Document required services and other critical infastructure
+5. Don't forget about the network quiz on cisco because you will likely be done before Linux
 
 
 Go top to bottom unless you see something in the readme that indicates extra points for skipping.
@@ -17,8 +18,6 @@ Go top to bottom unless you see something in the readme that indicates extra poi
 Find key terms at the bottom
 Do things in the readme before going through this standardized list
 ---
-
-## High Priority Items (Most Points)
 
 ### 1 User Account Management
 
@@ -113,7 +112,7 @@ Get-LocalUser | Select-Object Name, Enabled, Description
 
 ---
 
-### 3 Windows Updates
+### 3 Windows Updates (Maybe ask Gavin before you do this, it *may* brick the machine)
 
 #### Install All Updates
 ```powershell
@@ -130,8 +129,6 @@ Install-WindowsUpdate -AcceptAll -AutoReboot
 **Instructions:**
 - Install ALL critical, security, and recommended updates
 - This usually gives multiple points
-- ⚠️ **RISKY**: May require multiple restarts and take 15-30+ minutes
-- Prioritize this early so updates can install while you work on other items
 
 #### Enable Automatic Updates
 1. Settings → Update & Security → Windows Update → Advanced options
@@ -176,7 +173,7 @@ netsh advfirewall set allprofiles firewallpolicy blockinbound,allowoutbound
 ### 5 Remove Prohibited Software
 
 #### Common Prohibited Software
-Look for and remove these programs:
+Look for and remove these programs (careful, some of these are needed):
 
 **Hacking Tools:**
 - Wireshark (network analyzer)
@@ -190,20 +187,19 @@ Look for and remove these programs:
 - Netcat
 
 **Unauthorized Programs:**
-- Games (unless specifically allowed):
+- Games (we don't allow fun)):
   - Minesweeper
   - Solitaire
   - Hearts
-  - Any Steam/Epic games
 - P2P/Torrent software:
   - uTorrent
   - BitTorrent
   - LimeWire
   - FrostWire
 - Unauthorized remote access:
-  - TeamViewer (unless required)
+  - TeamViewer
   - AnyDesk
-  - VNC (unless required)
+  - VNC
 
 #### How to Remove Software
 ```powershell
@@ -261,16 +257,13 @@ Start-MpScan -ScanType FullScan
 - Ensure Windows Defender is enabled
 - Update virus definitions
 - Run a full system scan
-- ⚠️ Full scan can take 30+ minutes
 
 #### Remove Other Antivirus (If Present)
-- Windows Defender is sufficient
+- Windows Defender is good
 - Multiple antivirus programs can conflict
-- Remove Norton, McAfee, AVG, etc. unless specifically required by README
-
+- Remove Norton, McAfee, AVG, they are evil and vampires and they steal and evil
 ---
 
-## 🎯 Medium Priority Items (Good Points)
 
 ### 7 Service Management
 
@@ -305,11 +298,10 @@ Stop-Service -Name "TlntSvr" -Force
 Set-Service -Name "TlntSvr" -StartupType Disabled
 ```
 
-⚠️ **VERY RISKY**: Disabling wrong services can break the system or cost points!
 - Always check README for required services
 - Don't disable: Windows Update, Windows Defender, DNS Client, DHCP Client, Workstation
 
-#### Secure Remote Desktop (If Required)
+#### Secure Remote Desktop (Skip to disable if it isn't required)
 If README says Remote Desktop should be enabled:
 
 1. System Properties → Remote tab
@@ -326,7 +318,7 @@ Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\W
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 ```
 
-If README says Remote Desktop should be disabled:
+If README says Remote Desktop should be disabled or doesn't mention it as essential:
 ```powershell
 # Disable RDP
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 1
@@ -368,7 +360,6 @@ Navigate to **Local Policies → User Rights Assignment**:
 | Deny access to this computer from the network | Guest |
 | Deny log on locally | Guest |
 
-⚠️ **RISKY**: Be very careful with "Deny" policies - you could lock yourself out!
 
 ---
 
@@ -390,11 +381,6 @@ In `secpol.msc`, navigate to **Local Policies → Audit Policy**:
 | Audit process tracking | No Auditing |
 | Audit system events | Success, Failure |
 
-**Why enable auditing?**
-- Helps detect intrusion attempts
-- Tracks administrative changes
-- Usually worth points
-
 ---
 
 ### 10 Browser Security
@@ -402,11 +388,11 @@ In `secpol.msc`, navigate to **Local Policies → Audit Policy**:
 #### Internet Explorer / Edge Settings
 1. Open Internet Options (Control Panel → Internet Options)
 2. **Security tab:**
-   - Internet zone: Medium-High or High
+   - Internet zone: High
    - Trusted sites: Remove unnecessary sites
    - Restricted sites: Add any suspicious domains
 3. **Privacy tab:**
-   - Set to Medium-High or High
+   - Set to High
    - Enable "Turn on Pop-up Blocker"
    - Advanced → Accept only first-party cookies
 4. **Advanced tab:**
@@ -430,7 +416,6 @@ In `secpol.msc`, navigate to **Local Policies → Audit Policy**:
 
 ---
 
-## 🎯 Lower Priority Items (Still Worth Points)
 
 ### 11 Additional Security Features
 
@@ -569,6 +554,8 @@ Check critical folders have correct permissions:
 Get-ChildItem "C:\Program Files" -Recurse | Get-Acl | Where-Object {$_.Access | Where-Object {$_.IdentityReference -eq "Everyone" -and $_.FileSystemRights -match "Write"}}
 ```
 
+**This is the point of: "probably go help with linux or packet tracer"**
+
 #### Enable BitLocker (If Available)
 Only if README mentions encryption:
 
@@ -576,6 +563,7 @@ Only if README mentions encryption:
 2. Turn on BitLocker for C: drive
 3. Save recovery key securely
 4. **RISKY**: Takes long time, could cause issues
+5. (Bitlocker can be mean, maybe just go help with linux)
 
 ---
 
@@ -624,6 +612,7 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /v EnableMultica
 
 
 **KEY TERMS**
+
 Powershell: a terminal like enviornment, its a program you can run
 
 GUI: graphical user interface, the settings pane and everything you can understand without the text
