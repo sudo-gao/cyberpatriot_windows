@@ -1,21 +1,26 @@
-# 🛡️ CyberPatriot Windows Security Checklist (Claude)
+# 🛡️ CyberPatriot Windows Security Checklist Updated in 2025-2026 Season
 
 > A comprehensive security hardening checklist for CyberPatriot competitions on Windows systems. Items are ordered from highest to lowest point value.
 
-## ⚠️ CRITICAL FIRST STEPS
+## BIG FIRST STEPS
 
 **DO THESE BEFORE ANYTHING ELSE:**
 
-1. 📖 **Read the README thoroughly** - Contains critical information about required services and authorized users
-2. 🔍 **Answer all forensics questions** - Complete BEFORE making system changes
-3. 💾 **Take a VM snapshot** - Create a restore point in case something breaks
-4. 📝 **Document authorized users and admins** - Write down who should have access according to README
+1. **Read the README thoroughly** - Contains critical information about required services and authorized users
+2. **Answer all forensics questions** - Complete BEFORE making system changes
+3. **Document authorized users and admins** - Write down who should have access according to README
+4. **Document required services and other critical infastructure
 
+
+Go top to bottom unless you see something in the readme that indicates extra points for skipping.
+
+Find key terms at the bottom
+Do things in the readme before going through this standardized list
 ---
 
-## 🎯 High Priority Items (Most Points)
+## High Priority Items (Most Points)
 
-### 1️⃣ User Account Management
+### 1 User Account Management
 
 #### Remove Unauthorized Users
 ```powershell
@@ -29,7 +34,7 @@ net user <username> /delete
 **Instructions:**
 - Compare user list against README authorized users
 - Delete any user accounts not explicitly listed as authorized
-- Don't delete your own account!
+- Don't delete your own account, dat bad
 
 #### Remove Unauthorized Administrators
 ```powershell
@@ -43,9 +48,9 @@ net localgroup administrators <username> /delete
 **Instructions:**
 - Check README for who should be an administrator
 - Remove anyone from Administrators group who isn't authorized
-- ⚠️ **VERY RISKY**: Never remove yourself or you'll lose admin access permanently!
+- **Be careful here**
 
-#### Add Missing Authorized Users
+#### Add Missing Users
 ```powershell
 # Create new user
 net user <username> <password> /add
@@ -73,7 +78,7 @@ Get-LocalUser | Select-Object Name, Enabled, Description
 
 ---
 
-### 2️⃣ Password Policies
+### 2 Password Policies
 
 #### Configure Password Policy
 1. Press `Win + R`, type `secpol.msc`, press Enter
@@ -106,11 +111,9 @@ Get-LocalUser | Select-Object Name, Enabled, Description
 | Account lockout duration | 30 minutes |
 | Reset account lockout counter after | 30 minutes |
 
-⚠️ **Note**: Setting lockout too low (like 3 attempts) could lock YOU out during competition!
-
 ---
 
-### 3️⃣ Windows Updates
+### 3 Windows Updates
 
 #### Install All Updates
 ```powershell
@@ -137,7 +140,7 @@ Install-WindowsUpdate -AcceptAll -AutoReboot
 
 ---
 
-### 4️⃣ Firewall Configuration
+### 4 Firewall Configuration
 
 #### Enable Windows Defender Firewall
 ```powershell
@@ -170,7 +173,7 @@ netsh advfirewall set allprofiles firewallpolicy blockinbound,allowoutbound
 
 ---
 
-### 5️⃣ Remove Prohibited Software
+### 5 Remove Prohibited Software
 
 #### Common Prohibited Software
 Look for and remove these programs:
@@ -235,7 +238,7 @@ dir "C:\Users\*\Desktop" /s
 
 ---
 
-### 6️⃣ Windows Defender/Antivirus
+### 6 Windows Defender/Antivirus
 
 #### Enable and Update Windows Defender
 ```powershell
@@ -269,7 +272,7 @@ Start-MpScan -ScanType FullScan
 
 ## 🎯 Medium Priority Items (Good Points)
 
-### 7️⃣ Service Management
+### 7 Service Management
 
 #### Disable Unnecessary Services
 ```powershell
@@ -332,7 +335,7 @@ Disable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
 ---
 
-### 8️⃣ Local Security Policy Settings
+### 8 Local Security Policy Settings
 
 Open `secpol.msc` and configure these settings:
 
@@ -369,7 +372,7 @@ Navigate to **Local Policies → User Rights Assignment**:
 
 ---
 
-### 9️⃣ Audit Policies
+### 9 Audit Policies
 
 Enable auditing to track security events:
 
@@ -394,7 +397,7 @@ In `secpol.msc`, navigate to **Local Policies → Audit Policy**:
 
 ---
 
-### 🔟 Browser Security
+### 10 Browser Security
 
 #### Internet Explorer / Edge Settings
 1. Open Internet Options (Control Panel → Internet Options)
@@ -429,7 +432,7 @@ In `secpol.msc`, navigate to **Local Policies → Audit Policy**:
 
 ## 🎯 Lower Priority Items (Still Worth Points)
 
-### 1️⃣1️⃣ Additional Security Features
+### 11 Additional Security Features
 
 #### Disable AutoRun/AutoPlay
 Prevents automatic execution of programs from USB/CD:
@@ -474,7 +477,7 @@ reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v Enab
 
 ---
 
-### 1️⃣2️⃣ Check for Malicious Configurations
+### 12 Check for Malicious Configurations
 
 #### Review Scheduled Tasks
 ```powershell
@@ -544,7 +547,7 @@ net share <sharename> /delete
 
 ---
 
-### 1️⃣3️⃣ File System Security
+### 13 File System Security
 
 #### Set Proper File Permissions
 Check critical folders have correct permissions:
@@ -558,7 +561,7 @@ Check critical folders have correct permissions:
 - `C:\Windows` - Only SYSTEM and Administrators should have modify rights
 - `C:\Program Files` - Only Administrators should have modify rights
 
-⚠️ **VERY RISKY**: Changing system folder permissions can break Windows!
+**VERY RISKY**: Changing system folder permissions can break Windows!
 
 #### Find Files with Unusual Permissions
 ```powershell
@@ -572,11 +575,11 @@ Only if README mentions encryption:
 1. Control Panel → BitLocker Drive Encryption
 2. Turn on BitLocker for C: drive
 3. Save recovery key securely
-4. ⚠️ **RISKY**: Takes long time, could cause issues
+4. **RISKY**: Takes long time, could cause issues
 
 ---
 
-### 1️⃣4️⃣ Additional Hardening
+### 14 Additional Hardening
 
 #### Disable SMBv1 Protocol
 SMBv1 is vulnerable to WannaCry and other attacks:
@@ -602,10 +605,10 @@ OptionalFeatures.exe
 - ☐ Simple TCPIP Services
 
 **Enable these for security:**
-- ☑ Windows Defender (should already be on)
+- Windows Defender (should already be on)
 
 #### Registry Security Checks
-⚠️ **VERY RISKY**: Only modify registry if you know what you're doing!
+**Be careful doing this**
 
 **Disable LM Hash Storage:**
 ```powershell
@@ -619,64 +622,9 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /v EnableMultica
 
 ---
 
-## 📋 Final Checklist
 
-Before submitting, verify:
+**KEY TERMS**
+Powershell: a terminal like enviornment, its a program you can run
 
-- [ ] All forensics questions answered
-- [ ] README requirements followed (authorized users, required services)
-- [ ] All Windows Updates installed
-- [ ] Firewall enabled on all profiles
-- [ ] Password policy configured (complexity, age, lockout)
-- [ ] Unauthorized users removed
-- [ ] Unauthorized admins removed
-- [ ] Guest account disabled
-- [ ] Prohibited software removed
-- [ ] Prohibited media files deleted
-- [ ] Antivirus enabled and updated
-- [ ] Audit policies enabled
-- [ ] Unnecessary services disabled (only if safe per README)
-- [ ] Browser security configured
-- [ ] UAC enabled
-- [ ] AutoRun/AutoPlay disabled
-- [ ] Startup programs checked
-- [ ] Scheduled tasks reviewed
-- [ ] Hosts file clean
-- [ ] System scored at least once to verify no breaking changes
-
----
-
-## 🆘 Troubleshooting
-
-### If you lose points after a change:
-1. Take another snapshot immediately
-2. Review what you just changed
-3. Restore previous snapshot if needed
-4. Consult README again
-
-### If you lock yourself out:
-- Should have taken snapshot (you did, right?)
-- May need to revert to snapshot
-- Prevention: Never remove yourself from Administrators group
-
-### If system becomes unstable:
-- Restore to previous snapshot
-- Boot into Safe Mode (F8 during boot)
-- Use System Restore if available
-
----
-
-## 📚 Resources
-
-- [Microsoft Security Baselines](https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-security-baselines)
-- [CIS Windows Benchmarks](https://www.cisecurity.org/cis-benchmarks/)
-- [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
-
----
-
-## ⚖️ License
-
-This checklist is provided as-is for educational purposes in CyberPatriot competitions.
-
-**Good luck! 🚀**
+GUI: graphical user interface, the settings pane and everything you can understand without the text
 
